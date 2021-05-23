@@ -1,5 +1,5 @@
 (define (eval exp env)
-  (cond ((self-evaluating? exp) exp)
+  (cond ((self-eval? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
         ((quoted? exp) (text-of-quotation exp))
         ((assignment? exp) (eval-assignment exp env))
@@ -29,7 +29,7 @@
   (if (no-operands? exps)
       '()
       (cons (eval (first-operand exps) env)
-            (list-of-values (rest-of-operands exps) env)))) 
+            (list-of-values (rest-operand exps) env)))) 
 
 (define (eval-if exp env)
   (if (true? (eval (if-predicate exp) env)) 
@@ -49,4 +49,4 @@
 (define (eval-definition exp env)
   (my-define-variable! (definition-variable exp)
                        (eval (definition-value exp) env)
-                       env)
+                       env)) 

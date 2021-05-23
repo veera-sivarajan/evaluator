@@ -58,7 +58,7 @@
 ;; if statements
 (define (if? exp) (cmp-car exp 'if))
 
-(define (if-predicated (car (cdr exp)))) 
+(define (if-predicate exp) (car (cdr exp))) 
 
 (define (if-conseq exp) (car (cdr (cdr exp)))) ; if true
 
@@ -91,9 +91,11 @@
 ;; apply
 (define (application? exp) (pair? exp)) ;; pair that is not any of above
 
-(define (operator exp) (car exp))
+;; (define (application? exp) (cmp-car exp 'call))
 
-(define (operands exp) (cdr exp)) 
+(define (operator exp) (car exp)) ;; (fact 3) -> operator == fact
+
+(define (operands exp) (cdr exp)) ;; operand == 3
 
 (define (no-operands? ops) (null? ops))
 
