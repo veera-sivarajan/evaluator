@@ -1,4 +1,4 @@
-;; self eval
+;; sel eval
 (define (self-eval? exp)
   (cond ((number? exp) true)
         ((string? exp) true)
