@@ -37,7 +37,7 @@
   (let ((f-params (cdr (car (cdr exp))))
         (body (cdr (cdr exp)))) ; func body can be multiple expressions
         (if (func? exp) ;(func (fact n) (if (= n 0) 1 (* n (fact (- n 1))))
-            (make-lambda f-params body) 
+            (make-proc f-params body) 
             (error "Wrong expression for func-value:" exp)))) 
 
 (define (var? exp) (oper=? exp 'var))
@@ -51,3 +51,20 @@
   (if (var? exp)
       (car (cdr (cdr exp)))
       (error "Wrong expression for var-value:" exp))) 
+
+(define (make-proc? exp) (oper=? exp 'make-proc)) 
+
+(define (make-proc-params exp)
+  (if (make-proc? exp)
+      (car (cdr exp)) ; (lambda (num) (= num 5))
+      (error "Wrong expression for make-proc-params:" exp))) 
+  
+(define (make-proc-body exp)
+  (if (make-proc? exp)
+      (cdr (cdr exp))
+      (error "Wrong expression for make-proc-body:" exp))) 
+
+(define (build-make-proc params body)
+  (cons 'make-proc (cons params body))) 
+
+
