@@ -148,7 +148,27 @@
                       (sequence->exp (cond-actions first))
                       (expand-clauses rest)))))) 
 
+(define (let? exp) (oper=? exp 'let))
 
+(define (let-binds exp)
+  (if (let? exp)
+      (car (cdr exp))
+      (error "Wrong expression for let-binds:" exp)))
 
-             
-              
+(define (let-body exp)
+  (if (let? exp)
+      (car (cdr (cdr exp)))
+      (error "Wrong expression for let-body:" exp)))
+
+(define (bind-vars binds) (map car binds)) 
+
+(define (bind-exps binds) (map car (map cdr binds))) 
+
+(define (build-combination params body exps)
+  (cons (list 'lambda params body) exps)) 
+
+(define (let->combination exps)
+  (let ((binds (let-binds exps)))
+    (build-combination (bind-vars binds)
+                       (let-body exps)
+                       (bind-exps binds))))
