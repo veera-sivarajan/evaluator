@@ -85,7 +85,29 @@
       (if (not (null? (cdr (cdr (cdr exp)))))
           (car (cdr (cdr (cdr exp))))
           'false)
-      (error "Wrong expression for if-altern:" exp))) 
-      
+      (error "Wrong expression for if-altern:" exp)))
+
 (define (build-if pred conseq altern)
   (list 'if pred conseq altern)) 
+
+(define (begin? exp) (oper=? exp 'begin))
+
+(define (begin-exps exp)
+  (if (begin? exp)
+      (cdr exp)
+      (error "Wrong expression for begin-exps:" exp)))
+
+(define (build-begin seq)
+  (cons 'begin seq)) 
+
+(define (application? exp) (pair? exp))
+
+(define (operator exp) (car exp))
+
+(define (operand exp) (cdr exp))
+
+(define (no-operands? ops) (null? ops))
+
+(define (first-operand ops) (car ops))
+
+(define (rest-operand ops) (cdr ops))
