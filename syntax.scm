@@ -111,3 +111,44 @@
 (define (first-operand ops) (car ops))
 
 (define (rest-operand ops) (cdr ops))
+
+(define (cond? exp) (oper=? exp 'cond))
+
+(define (cond-clauses exp)
+  (if (cond? exp)
+      (cdr exp)
+      (error "Wrong expression for cond-clauses:" exp))) 
+
+(define (cond-predicate clause) (car clause))
+
+(define (cond-actions clause) (cdr clause))
+
+(define (cond-else-clause? clause) (eq? (cond-predicate clause) 'else))
+
+(define (cond->if exp) (expand-clauses (cond-clauses exp)))
+
+(define (last-exp? seq) (null? (cdr seq)))
+
+(define (first-exp seq) (car seq)) 
+
+(define (sequence->exp seq)
+  (cond ((null? seq) '())
+        ((last-exp? seq) (first-exp seq))
+        (else (build-begin seq)))) 
+
+(define (expand-clauses clauses)
+  (if (null? clauses)
+      'false
+      (let ((first (car clauses)) (rest (cdr clauses)))
+        (if (cond-else-clause? first)
+            (if (null? rest)
+                (sequence->exp (cond-actions first))
+                (error "ELSE clause should be last" clauses))
+            (build-if (cond-predicate first)
+                      (sequence->exp (cond-actions first))
+                      (expand-clauses rest)))))) 
+
+
+
+             
+              
