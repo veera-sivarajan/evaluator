@@ -25,7 +25,7 @@
   (foldl (lambda (init first) (+ init 1)) 0 lis)) 
 
 (define (v-append list-a list-b)
-  (foldr (lambda (first init) (cons first init)) list-b list-a)) 
+  (foldr cons list-b list-a)) 
 
 (define (v-list-ref lis index)
   (if (and (< index (v-length lis)) (>= index 0))
@@ -33,4 +33,3 @@
           (car lis)
           (v-list-ref (cdr lis) (- index 1)))
       (error "Index out of range" index))) 
-
