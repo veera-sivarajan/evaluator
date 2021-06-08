@@ -32,4 +32,10 @@
       (if (= index 0)
           (car lis)
           (v-list-ref (cdr lis) (- index 1)))
-      (error "Index out of range" index))) 
+      (error "Index out of range" index)))
+
+(define (v-for-each proc lis)
+  (if (null? lis)
+      'done
+      (begin (proc (car lis))
+             (v-for-each proc (cdr lis))))) 
