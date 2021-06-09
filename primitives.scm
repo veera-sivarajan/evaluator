@@ -39,3 +39,17 @@
       'done
       (begin (proc (car lis))
              (v-for-each proc (cdr lis))))) 
+
+(define (v-remove ele lis)
+  (define (remove-helper first init)
+    (if (equal? first ele)
+        init
+        (cons first init)))
+  (foldr remove-helper '() lis)) 
+
+(define (v-remove-first ele lis)
+  (if (not (null? lis))
+      (if (equal? (car lis) ele)
+          (cdr lis)
+          (cons (car lis) (v-remove-first ele (cdr lis))))
+      (error "Not in list ele:" ele))) 
