@@ -172,3 +172,27 @@
     (build-combination (bind-vars binds)
                        (let-body exps)
                        (bind-exps binds))))
+
+(define (false? exp) (eq? exp false)) 
+
+(define (true? exp) (not (false? exp))) 
+
+(define (build-procedure params body env)
+  (list 'proc params body env)) 
+
+(define (compound-procedure? p) (oper=? p 'proc)) 
+
+(define (proc-params p)
+  (if (compound-procedure? p)
+      (car (cdr p))
+      (error "Wrong expression for proc-params:" p)))
+
+(define (proc-body p)
+  (if (compound-procedure? p)
+      (car (cdr (cdr p)))
+      (error "Wrong expression for proc-body:" p)))
+
+(define (proc-env p)
+  (if (compound-procedure? p)
+      (car (cdr (cdr (cdr p))))
+      (error "Wrong expression for proc-env:" p)))
