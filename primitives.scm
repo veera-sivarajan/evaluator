@@ -59,6 +59,11 @@
         ((null? exps) 'true)
         (else (v-and (cdr exps))))) 
 
+(define (v-or exps)
+  (cond ((null? exps) 'false)
+        ((not (false? (car exps))) 'true)
+        (else (v-or (cdr exps))))) 
+
 (define (range num)
   (define (range-helper start)
     (if (= start (- num 1))
@@ -70,3 +75,19 @@
   (if (< num 0)
       (* -1 num)
       num))
+
+(define (v-even? num) (= (remainder num 2) 0)) 
+
+(define (v-odd? num) (not (v-even? num))) 
+
+(define (println data)
+  (newline)
+  (display data)
+  (newline)
+  'done) 
+
+;TODO: Rename keywords to make fancier names
+;; 1. cons -> pair
+;; 2. car  -> head
+;; 3. cdr  -> tail
+
