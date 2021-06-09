@@ -53,3 +53,20 @@
           (cdr lis)
           (cons (car lis) (v-remove-first ele (cdr lis))))
       (error "Not in list ele:" ele))) 
+
+(define (v-and exps)
+  (cond ((false? (car exps)) 'false)
+        ((null? exps) 'true)
+        (else (v-and (cdr exps))))) 
+
+(define (range num)
+  (define (range-helper start)
+    (if (= start (- num 1))
+        (cons start '()) 
+        (cons start (range-helper (+ start 1)))))
+  (range-helper 0)) 
+
+(define (my-abs num)
+  (if (< num 0)
+      (* -1 num)
+      num))
