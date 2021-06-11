@@ -36,4 +36,16 @@
           (scan (frame-vars frame) (frame-vals vals)))))
   (env-loop env)) 
 
-(define 
+
+(define (set-var-value! var val env)
+  (define (env-loop env)
+    (define (scan vars vals)
+      (cond ((null? vars) (env-loop (prev-envs env)))
+            ((eq? var (car vars)) (set-car! vals val))
+            (else (scan (cdr vars) (cdr vals)))))
+    (if (eq? env empty-env)
+        (error "Unbound variable -- SET" var)
+        (let ((frame (curr-frame env)))
+          (scan (frame-vars frame) (frame-vals frame)))))
+  (env-loop env)) 
+              
