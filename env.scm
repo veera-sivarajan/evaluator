@@ -31,9 +31,9 @@
             ((eq? var (car vars)) (car vals))
             (else (scan (cdr vars) (cdr vals)))))
     (if (eq? env empty-env)
-        (error "Unbound variable" var)
-        (let ((frame (curr-env env)))
-          (scan (frame-vars frame) (frame-vals vals)))))
+        (error "Unbound variable" var) ;FIXME: #35 tries to get the first
+        (let ((frame (curr-env env)))  ; frame from first frame 
+          (scan (frame-vars frame) (frame-vals frame)))))
   (env-loop env)) 
 
 (define (set-var-value! var val env)
@@ -55,4 +55,19 @@
             ((eq? var (car vars)) (set-car! vals val))
             (else (scan (cdr vars) (cdr vals)))))
     (scan (frame-vars frame) (frame-vals frame)))) 
-    
+
+(define (remove-tree ele lis)
+  (cond ((null? lis) '())
+        ((pair? (car lis)) (cons (remove-tree ele (car lis))
+                                 (remove-tree ele (cdr lis))))
+        ((equal? (car lis) ele) (cdr lis))
+        (else (cons (car lis) (remove-tree ele (cdr lis)))))) 
+
+(define (remove-from-env var env)
+  (let ((val (lookup-variable var env)))
+    (cons (remove-tree var env)
+          (remove-tree val env))))
+
+(define (unbound! var env)
+  (let ((new (remove-from-env var env)))
+    (build-frame (caaar new) (cdadr new)))) 
