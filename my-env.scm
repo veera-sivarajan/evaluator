@@ -1,7 +1,7 @@
 ;; Implementing the environment for a Lisp Interpreter
 ;; A frame is a list with any number of lists representing bindings
 
-(define empty-env '(frame)) 
+(define empty-env '()) 
 
 (define (new-frame vars vals)
   (if (and (null? vars) (null? vals))
@@ -10,9 +10,9 @@
                   (new-frame (cdr vars) (cdr vals)))))
 
 (define (build-frame vars vals)
-  (cons (cons 'frame (new-frame vars vals)) 'end)) 
+  (cons 'frame (new-frame vars vals)))
 
-(define (binds frame) (cdar frame))  
+(define (binds frame) (cdr frame))  
 
 (define (frame-vars frame) (map car (binds frame)))
 
