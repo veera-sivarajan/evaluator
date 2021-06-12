@@ -52,3 +52,12 @@
       (let* ((frame (car env))
              (bind-list (binds frame)))
         (scan bind-list)))) 
+
+(define (define-variable! var val env)
+  (let ((frame (curr-frame env)))
+    (define (scan bind-list)
+      (cond ((null? bind-list) (add-binding-to-frame! var val frame))
+            ((eq? var (caar bind-list)) (set-cdr! (car bind-list) val))
+            (else (scan (cdr bind-list)))))
+    (scan (binds frame))))
+                
