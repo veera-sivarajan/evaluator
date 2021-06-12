@@ -28,4 +28,18 @@
 
 (define (prev-frame env) (cdr env)) 
 
+(define (add-binding-to-frame! var val frame)
+  (set-cdr! frame (cons (cons var val) (binds frame)))
+  'done)
+
+(define (extend-env vars vals base-env)
+  (cons (build-frame vars vals) base-env)) 
+
+(define (abstract proc var env #!optional val)
+  (if (null? env)
+      (error "Unbound variable" var)
+      (let* ((frame (curr-frame env))
+             (bind-list (binds frame)))
+        (proc bind-list)))) 
+
 
