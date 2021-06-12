@@ -49,6 +49,15 @@
           ((eq? var (caar bind-list)) (cdar bind-list))
           (else (lookup (cdr bind-list))))) 
   (abstract lookup var env)) 
+
+(define (set-var-value! var val env)
+  (define (set-var bind-list)
+    (cond ((null? bind-list) (set-var-value! var val (prev-frame env)))
+          ((eq? var (caar bind-list))
+           (begin (set-cdr! (car bind-list) val)
+                  'done))
+          (else (set-var (cdr bind-list)))))
+  (abstract set-var var env val)) 
            
 
 
