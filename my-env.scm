@@ -30,23 +30,13 @@
   (cons (build-frame vars vals) base-env)) 
 
 (define (lookup-variable var env)
-  (define (scan bind-list frame)
+  (define (scan bind-list)
     (cond ((equal? bind-list '())
            (lookup-variable var (prev-frame env)))
           ((eq? var (caar bind-list)) (cdar bind-list))
-          (else (scan (cdr bind-list) frame))))
+          (else (scan (cdr bind-list)))))
   (if (equal? env empty-env)
       (error "Unbound variable" var)
       (let* ((frame (car env))
              (bind-list (binds frame)))
-        (scan bind-list frame)))) 
-    
-    
-
- 
-  
-        
-        
-  
-
-  
+        (scan bind-list)))) 
