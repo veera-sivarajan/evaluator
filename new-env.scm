@@ -42,4 +42,13 @@
              (bind-list (binds frame)))
         (proc bind-list)))) 
 
+(define (lookup-variable var env)
+  (define (lookup bind-list)
+    (cond ((null? bind-list) ;FIXME: Find better way to recurse
+           (lookup-variable var (prev-frame env)))
+          ((eq? var (caar bind-list)) (cdar bind-list))
+          (else (lookup (cdr bind-list))))) 
+  (abstract lookup var env)) 
+           
+
 
