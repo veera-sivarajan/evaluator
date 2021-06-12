@@ -58,6 +58,16 @@
                   'done))
           (else (set-var (cdr bind-list)))))
   (abstract set-var var env val)) 
+
+(define (define-variable! var val env)
+  (let ((frame (curr-frame env)))
+    (define (helper bind-list)
+      (cond ((null? bind-list) (add-binding-to-frame! var val frame))
+            ((eq? var (caar bind-list))
+             (begin (set-cdr! (car bind-list) val)
+                    'done)) 
+            (else (helper (cdr bind-list)))))
+    (abstract helper var env val))) 
            
 
 
