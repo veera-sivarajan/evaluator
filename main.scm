@@ -1,0 +1,15 @@
+(define (println data)
+  (newline)
+  (display data)
+  (newline)
+  'done) 
+
+(define (setup-env)
+  (let ((init-env (extend-env (primitive-procs-names)
+                              (primitive-proc-vals)
+                              empty-env)))
+    (define-variable! 'true true init-env)
+    (define-variable! 'false false init-env)
+    init-env))
+
+(define global-env (setup-env)) 
