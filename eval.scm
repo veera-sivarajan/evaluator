@@ -7,7 +7,7 @@
   (cond ((self-evaluating? exp) exp)
         ((name? exp) (lookup-variable exp env))
         ((quote? exp) (quote-content exp))
-        ((assign? exp) (eval-assign exp env)) ;TODO
+        ((assign? exp) (eval-assign exp env)) 
         ((func? exp) (eval-func exp env)) ; TODO
         ((if? exp) (eval-if exp env))
         ((make-proc? exp) (build-procedure (make-proc-params exp)
@@ -17,5 +17,38 @@
         ((cond? exp) (eval (cond->if exp) env))
         ((application? exp)
          (apply (eval (operator exp) env)
-                (list-of-values (operands exp) env))) ; TODO
+                (list-of-values (operands exp) env)))  
         (else (error "Unknown expression -- EVAL" exp)))) 
+
+(define (list-of-values exps env)
+  (if (no-operands? exps)
+      '()
+      (cons (eval (first-operand exps) env)
+            (list-of-values (rest-operand exp) env)))) 
+
+(define (eval-if exp env)
+  (if (true? (eval (if-pred exp) env))
+      (eval (if-conseq exp) env)
+      (eval (if-altern exp) env))) 
+             
+(define (eval-sequence exps env)
+  (cond ((last-exp? exps) (eval (first-exp exps) env)
+         (else (eval (first-exp exps) env)
+               (eval-sequence (rest-exps exp) env))))) 
+
+(define (eval-assign exp env)
+  (set-var-value! (assign-var exp)
+                  (eval (assign-value exp) env)
+                  env)
+  'done)
+
+(define (eval-func exp env)
+  (define-variable! (func-name exp) (eval (func-value exp) env) env)
+  'done) 
+    
+
+    
+  
+
+    
+    
