@@ -91,3 +91,28 @@
 ;; 2. car  -> head
 ;; 3. cdr  -> tail
 
+(define (primitive-proc? proc) (oper=? proc 'primitive)) 
+
+(define primitive-procs
+  (list (list 'foldl foldl)
+        (list 'foldr foldr)
+        (list 'map v-map)
+        (list 'filter v-filter)
+        (list 'reverse v-reverse)
+        (list 'length v-length)
+        (list 'append v-append)
+        (list 'list-ref v-list-ref)
+        (list 'for-each v-for-each)
+        (list 'remove 'v-remove)
+        (list 'remove-first 'v-remove-first)
+        (list 'head car)
+        (list 'tail cdr)
+        (list 'pair cons)
+        (list 'null? null?))) 
+
+(define (primitive-proc-names) (map car primitive-procs)) 
+
+(define (primitive-proc-vals)
+  (map (lambda (proc) (cons 'primitive (cadr proc))) primitive-procs)) 
+
+(define (name->primitive proc) (car (cdr proc)))
