@@ -1,3 +1,5 @@
+;; (load "/home/veera/Projects/Evaluator/primitives.scm")
+
 (define (println data)
   (newline)
   (display data)
@@ -13,3 +15,28 @@
     init-env))
 
 (define global-env (setup-env)) 
+
+(define apply-in-scheme apply) 
+
+(define (apply-primitive-proc proc args)
+  (apply-in-scheme (name->primitive proc) args)) 
+
+(define input-prompt ">> ")
+
+(define output-prompt "Value:")
+
+(define (user-print obj)
+  (if (compound-procedure? obj)
+      (display (list 'compound-procedure
+                     (proc-params obj)
+                     (proc-body obj)
+                     '<procedure-env>))
+      (display obj))) 
+
+(define (driver-loop)
+  (println input-prompt)
+  (let ((input (read)))
+    (let ((output (eval input global-env)))
+      (println output-prompt)
+      (user-print output)))
+  (driver-loop)) 
