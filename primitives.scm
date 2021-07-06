@@ -1,3 +1,5 @@
+;; primitives.scm
+
 (define (foldl oper init lis) 
   (if (null? lis)
       init
@@ -108,7 +110,9 @@
         (list 'head car)
         (list 'tail cdr)
         (list 'pair cons)
-        (list 'null? null?))) 
+        (list 'null? null?)
+        (list '+ +)
+        (list '* *)))
 
 (define (primitive-proc-names) (map car primitive-procs)) 
 
@@ -116,3 +120,6 @@
   (map (lambda (proc) (cons 'primitive (cadr proc))) primitive-procs)) 
 
 (define (name->primitive proc) (car (cdr proc)))
+
+(define (apply-primitive-proc proc args)
+  (apply-in-scheme (name->primitive proc) args)) 

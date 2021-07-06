@@ -1,3 +1,7 @@
+;; eval.scm
+
+(define (first-exp seq) (car seq)) 
+
 (define (println data)
   (newline)
   (display data)
@@ -32,9 +36,9 @@
       (eval (if-altern exp) env))) 
              
 (define (eval-sequence exps env)
-  (cond ((last-exp? exps) (eval (first-exp exps) env)
+  (cond ((last-exp? exps) (eval (first-exp exps) env))
          (else (eval (first-exp exps) env)
-               (eval-sequence (rest-exps exp) env))))) 
+               (eval-sequence (rest-exps exp) env)))) 
 
 (define (eval-assign exp env)
   (set-var-value! (assign-var exp)
@@ -46,6 +50,15 @@
   (define-variable! (func-name exp) (eval (func-value exp) env) env)
   'done) 
     
+(define (apply proc args)
+  (cond ((primitive-proc? proc) (apply-primitive-proc proc args))
+        ((compound-proc? proc)
+         (eval-sequence (proc-body proc)
+                        (extend-env (proc-params proc)
+                                    args
+                                    (proc-env proc))))
+        (else (error "Unknown proc type -- APPLY" proc)))) 
+        
 
     
   

@@ -1,5 +1,7 @@
+;; syntax.scm
 ;; extract pieces of information from entered code
 ;; essentially defines the syntax of the language
+(println "syntax.scm")
 
 (define (self-eval? exp) (or (number? exp) (string? exp))) 
 
@@ -53,6 +55,7 @@
       (car (cdr (cdr exp)))
       (error "Wrong expression for var-value:" exp))) 
 
+;; make-proc is new lambda
 (define (make-proc? exp) (oper=? exp 'make-proc)) 
 
 (define (make-proc-params exp)
@@ -131,6 +134,8 @@
 
 (define (first-exp seq) (car seq)) 
 
+(define (rest-exps seq) (cdr seq)) 
+
 (define (sequence->exp seq)
   (cond ((null? seq) '())
         ((last-exp? seq) (first-exp seq))
@@ -180,7 +185,7 @@
 (define (build-procedure params body env)
   (list 'proc params body env)) 
 
-(define (compound-procedure? p) (oper=? p 'proc)) 
+(define (compound-proc? p) (oper=? p 'proc)) 
 
 (define (proc-params p)
   (if (compound-procedure? p)

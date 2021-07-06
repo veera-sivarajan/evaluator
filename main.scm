@@ -1,4 +1,4 @@
-;; (load "/home/veera/Projects/Evaluator/primitives.scm")
+;; main.scm
 
 (define (println data)
   (newline)
@@ -17,9 +17,6 @@
 (define global-env (setup-env)) 
 
 (define apply-in-scheme apply) 
-
-(define (apply-primitive-proc proc args)
-  (apply-in-scheme (name->primitive proc) args)) 
 
 (define input-prompt ">> ")
 
