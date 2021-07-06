@@ -387,14 +387,15 @@
         (list 'pair cons)
         (list 'null? null?)
         (list '+ +)
-        (list '* *)))
+        (list '* *)
+        (list 'square square))) 
 
 (define (primitive-procs-names) (map car primitive-procs)) 
 
 (define (primitive-proc-vals)
-  (map (lambda (proc) (cons 'primitive (cadr proc))) primitive-procs)) 
+  (map (lambda (proc) (list 'primitive (cadr proc))) primitive-procs)) 
 
-(define (name->primitive proc) (car (cdr proc)))
+(define (name->primitive proc) (cadr proc))  
 
 (define (apply-primitive-proc proc args)
   (apply-in-scheme (name->primitive proc) args)) 
@@ -420,15 +421,16 @@
         ((begin? exp) (eval-sequence (begin-exps exp) env)) ; TODO
         ((cond? exp) (eval (cond->if exp) env))
         ((application? exp)
-         (apply (eval (operator exp) env)
-                (list-of-values (operands exp) env)))  
+         (eval-apply (eval (operator exp) env)
+                     (list-of-values (operands exp) env)))  
         (else (error "Unknown expression -- EVAL" exp)))) 
 
 (define (list-of-values exps env)
   (if (no-operands? exps)
       '()
       (cons (eval (first-operand exps) env)
-            (list-of-values (rest-operand exp) env)))) 
+            (list-of-values (rest-operand exps) env)))) 
+
 
 (define (eval-if exp env)
   (if (true? (eval (if-pred exp) env))
@@ -450,7 +452,10 @@
   (define-variable! (func-name exp) (eval (func-value exp) env) env)
   'done) 
     
-(define (apply proc args)
+(define (eval-apply proc args)
+  (println "apply")
+  (println proc)
+  (println args)
   (cond ((primitive-proc? proc) (apply-primitive-proc proc args))
         ((compound-proc? proc)
          (eval-sequence (proc-body proc)
@@ -459,12 +464,6 @@
                                     (proc-env proc))))
         (else (error "Unknown proc type -- APPLY" proc)))) 
         
-
-    
-  
-
-    
-    
 ;; main.scm
 
 (define (println data)
